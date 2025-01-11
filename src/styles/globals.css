@@ -3,7 +3,22 @@
 @tailwind utilities;
 
 @layer components {
-  .stat {
-    @apply block mb-4 last:mb-0;
+  .statBigDiv {
+    @apply bg-gray-100 rounded-md p-4 mt-2 lg:first:mt-0;
+  }
+  .statDiv {
+    @apply flex gap-2 mb-3 last:mb-0;
+  }
+
+  .statNum {
+    @apply block font-bold text-left flex-[0.5];
+  }
+
+  .statName {
+    @apply block text-right flex-1;
+  }
+
+  .statTitle {
+    @apply block flex-1 text-sm mb-1;
   }
 }
