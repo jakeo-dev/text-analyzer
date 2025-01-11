@@ -30,7 +30,6 @@ export default function Home() {
   function avgArrayElementLength(array: Array<string>) {
     let sum = 0;
     for (const word of array) sum += word.replaceAll(/\W/g, "").length;
-    frequentWords;
 
     return (sum / array.length).toFixed(1);
   }
@@ -79,11 +78,11 @@ export default function Home() {
 
   function sortDictionaryByValues(dictionary: { [key: string]: number }) {
     // https://stackoverflow.com/questions/25500316/sort-a-dictionary-by-value-in-javascript
-    let items: Array<[string, number]> = Object.keys(dictionary).map(function (
-      key
-    ) {
-      return [key, dictionary[key]];
-    });
+    const items: Array<[string, number]> = Object.keys(dictionary).map(
+      function (key) {
+        return [key, dictionary[key]];
+      }
+    );
 
     // Sort the array based on the second element
     items.sort(function (first, second) {
@@ -212,7 +211,7 @@ export default function Home() {
               <span className="statTitle">longest words</span>
               {longestWords(getWords(inputText))
                 .slice(0, 5)
-                .map(([word, length], index) => (
+                .map(([word], index) => (
                   <div className="statDiv" key={index}>
                     <span className="statNum">{word}</span>
                     {/* <span className="statName">{length}</span> */}
