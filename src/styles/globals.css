@@ -19,6 +19,6 @@
   }
 
   .statTitle {
-    @apply block flex-1 text-sm mb-1;
+    @apply block flex-1 text-sm mb-2;
   }
 }

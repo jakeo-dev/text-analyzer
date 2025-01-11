@@ -1,11 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ResponsiveTextArea from "@/components/ResponsiveTextArea";
 
 export default function Home() {
+  useEffect(() => {
+    setInputText(localStorage.getItem("input") ?? "");
+  }, []);
+
   const [inputText, setInputText] = useState("");
 
-  function handleClick(text: string) {
+  function handleInput(text: string) {
     setInputText(text);
+    localStorage.setItem("input", text);
   }
 
   function getWords(string: string) {
@@ -24,7 +29,7 @@ export default function Home() {
 
   function avgArrayElementLength(array: Array<string>) {
     let sum = 0;
-    for (let word of array) sum += word.replaceAll(/\W/g, "").length;
+    for (const word of array) sum += word.replaceAll(/\W/g, "").length;
     frequentWords;
 
     return (sum / array.length).toFixed(1);
@@ -37,10 +42,10 @@ export default function Home() {
       .split(" ")
       .filter((word) => word.length > 0);
 
-    let uniqueWordsArray = removeDuplicates(actualWordsArray);
+    const uniqueWordsArray = removeDuplicates(actualWordsArray);
 
-    let wordsDictionary: { [key: string]: number } = {};
-    for (let word of uniqueWordsArray) {
+    const wordsDictionary: { [key: string]: number } = {};
+    for (const word of uniqueWordsArray) {
       wordsDictionary[word.toLowerCase()] = word.length;
     }
 
@@ -59,13 +64,13 @@ export default function Home() {
       .split(" ")
       .filter((word) => word.length > 0);
 
-    let uniqueWordsArray = removeDuplicates(actualWordsArray);
+    const uniqueWordsArray = removeDuplicates(actualWordsArray);
 
-    let wordsDictionary: { [key: string]: number } = {};
-    for (let word of uniqueWordsArray) {
+    const wordsDictionary: { [key: string]: number } = {};
+    for (const word of uniqueWordsArray) {
       wordsDictionary[word.toLowerCase()] = 0;
     }
-    for (let word of actualWordsArray) {
+    for (const word of actualWordsArray) {
       wordsDictionary[word.toLowerCase()] += 1;
     }
 
@@ -74,7 +79,7 @@ export default function Home() {
 
   function sortDictionaryByValues(dictionary: { [key: string]: number }) {
     // https://stackoverflow.com/questions/25500316/sort-a-dictionary-by-value-in-javascript
-    var items: Array<[string, number]> = Object.keys(dictionary).map(function (
+    let items: Array<[string, number]> = Object.keys(dictionary).map(function (
       key
     ) {
       return [key, dictionary[key]];
@@ -92,9 +97,10 @@ export default function Home() {
     <>
       <div className="lg:flex gap-4 items-center justify-center min-h-screen">
         <div className="flex-1">
+          <h1 className="text-xl font-bold pl-3 pb-1">Text Analyzer</h1>
           <ResponsiveTextArea
             value={inputText}
-            onInput={(e) => handleClick(e.currentTarget.value)}
+            onInput={(e) => handleInput(e.currentTarget.value)}
             className="min-h-[31.875rem] lg:max-h-[80vh]" // 1 line = 2.125 rem
             placeholder="Enter text to analyze..."
             maxLength={-1}
@@ -102,7 +108,7 @@ export default function Home() {
           />
         </div>
 
-        <div className="lg:w-52 lg:max-h-[80vh] overflow-auto bg-gray-200 rounded-md p-2">
+        <div className="lg:w-52 lg:max-h-[80vh] overflow-auto bg-gray-200 border-gray-200 border-2 rounded-md p-2">
           <div className="statBigDiv">
             <div className="statDiv">
               <span className="statNum">{getWords(inputText).length}</span>
@@ -148,11 +154,16 @@ export default function Home() {
 
             <div className="statDiv">
               <span className="statNum">
-                {inputText.trim().split(/.?\n+.?/g).length}
+                {inputText.trim() == ""
+                  ? 0
+                  : inputText.trim().split(/.?\n+.?/g).length}
               </span>
               <span className="statName">
                 paragraph
-                {inputText.trim().split(/.?\n+.?/g).length != 1 ? "s" : ""}
+                {inputText.trim().split(/.?\n+.?/g).length != 1 &&
+                inputText.trim() != ""
+                  ? "s"
+                  : ""}
               </span>
             </div>
 
@@ -188,7 +199,9 @@ export default function Home() {
 
             <div className="statDiv">
               <span className="statNum">
-                {avgArrayElementLength(getWords(inputText))}
+                {inputText.trim() == ""
+                  ? 0
+                  : avgArrayElementLength(getWords(inputText))}
               </span>
               <span className="statName">average word length</span>
             </div>
@@ -197,13 +210,12 @@ export default function Home() {
           <div className="statBigDiv">
             <div className="statDiv block">
               <span className="statTitle">longest words</span>
-
               {longestWords(getWords(inputText))
                 .slice(0, 5)
-                .map(([word, count], index) => (
+                .map(([word, length], index) => (
                   <div className="statDiv" key={index}>
                     <span className="statNum">{word}</span>
-                    <span className="statName">{count}</span>
+                    {/* <span className="statName">{length}</span> */}
                   </div>
                 ))}
             </div>
@@ -212,7 +224,6 @@ export default function Home() {
           <div className="statBigDiv">
             <div className="statDiv block">
               <span className="statTitle">most frequent words</span>
-
               {frequentWords(getWords(inputText))
                 .slice(0, 5)
                 .map(([word, count], index) => (
