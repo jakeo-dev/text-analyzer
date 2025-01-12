@@ -88,6 +88,10 @@ export default function Home() {
     "any",
   ];
 
+  function handleDebugClick() {
+    console.log(inputText.match(/[A-Z]]/g));
+  }
+
   function handleInput(text: string) {
     setInputText(text);
     localStorage.setItem("input", text);
@@ -191,6 +195,13 @@ export default function Home() {
 
   return (
     <>
+      {/* <button
+        className="border-4 border-black bg-red-500 text-white text-3xl hover:bg-red-600 active:bg-red-700"
+        onClick={handleDebugClick}
+      >
+        DEBUG BUTTON!!!
+      </button> */}
+
       <div className="lg:flex gap-4 items-center justify-center min-h-screen">
         <div className="flex-1">
           <h1 className="text-xl font-bold pl-3 pb-1.5">Text Analyzer</h1>
@@ -204,7 +215,7 @@ export default function Home() {
           />
         </div>
 
-        <div className="lg:w-60 lg:max-h-[80vh] overflow-auto bg-gray-200 border-gray-200 border-2 rounded-md p-2 mt-4 lg:mt-0">
+        <div className="lg:w-60 lg:max-h-[80vh] overflow-auto bg-gray-200 border-gray-200 border-2 rounded-md p-2 mt-4 lg:mt-0 lg:-mb-6">
           <div className="statBigDiv">
             <div className="statDiv">
               <span className="statNum">{wordCount(inputText)}</span>
@@ -294,6 +305,16 @@ export default function Home() {
                 {inputText.trim() == "" ? 0 : avgArrayElementLength(getActualWords(inputText))}
               </span>
               <span className="statName">average word length</span>
+            </div>
+
+            <div className="statDiv">
+              <span className="statNum">{inputText.match(/[A-Z]/g)?.length}</span>
+              <span className="statName">uppercase letters</span>
+            </div>
+
+            <div className="statDiv">
+              <span className="statNum">{inputText.match(/[a-z]/g)?.length}</span>
+              <span className="statName">lowercase letters</span>
             </div>
           </div>
 
