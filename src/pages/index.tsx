@@ -122,7 +122,7 @@ export default function Home() {
         .filter((word) => /\w/.test(word));
       words = words
         .join(" ")
-        .replace(/[^A-z0-9-_\p{L}'’]/gu, " ") // counts words with dashes in them as one word, like "self-driving" or "spanish-speaking"
+        .replace(/[^A-Za-z0-9-_\p{L}'’]/gu, " ") // counts words with dashes in them as one word, like "self-driving" or "spanish-speaking"
         .replace(/(?<=.)' | '(?=.)/g, " ") // makes sure that single quotes are only counted as being parts of word when they're surrounded by letters on both sides (accounts for contractions & possessives but not plural possessives)
         .split(" ")
         .filter((word) => word.length > 0)
@@ -170,11 +170,9 @@ export default function Home() {
 
   function sortDictionaryByValues(dictionary: { [key: string]: number }) {
     // https://stackoverflow.com/questions/25500316/sort-a-dictionary-by-value-in-javascript
-    const items: Array<[string, number]> = Object.keys(dictionary).map(
-      function (key) {
-        return [key, dictionary[key]];
-      }
-    );
+    const items: Array<[string, number]> = Object.keys(dictionary).map(function (key) {
+      return [key, dictionary[key]];
+    });
 
     items.sort(function (first, second) {
       return second[1] - first[1];
@@ -186,8 +184,7 @@ export default function Home() {
   function removeCommonWords(array: Array<string>) {
     const newArray = JSON.parse(JSON.stringify(array));
     for (const word of array)
-      if (commonWords.includes(word))
-        newArray.splice(newArray.indexOf(word), 1);
+      if (commonWords.includes(word)) newArray.splice(newArray.indexOf(word), 1);
 
     return newArray;
   }
@@ -218,21 +215,15 @@ export default function Home() {
             </div>
 
             <div className="statDiv">
-              <span className="statNum">
-                {removeDuplicates(getActualWords(inputText)).length}
-              </span>
+              <span className="statNum">{removeDuplicates(getActualWords(inputText)).length}</span>
               <span className="statName">
                 unique word
-                {removeDuplicates(getActualWords(inputText)).length != 1
-                  ? "s"
-                  : ""}
+                {removeDuplicates(getActualWords(inputText)).length != 1 ? "s" : ""}
               </span>
             </div>
 
             <div className="statDiv">
-              <span className="statNum">
-                {inputText.replaceAll("\n", "").length}
-              </span>
+              <span className="statNum">{inputText.replaceAll("\n", "").length}</span>
               <span className="statName">
                 character
                 {inputText.replaceAll("\n", "").length != 1 ? "s" : ""}
@@ -245,33 +236,25 @@ export default function Home() {
               </span>
               <span className="statName">
                 character
-                {inputText.replaceAll("\n", "").replaceAll(/\s/g, "").length !=
-                1
-                  ? "s"
-                  : ""}{" "}
+                {inputText.replaceAll("\n", "").replaceAll(/\s/g, "").length != 1 ? "s" : ""}{" "}
                 <span className="text-sm">(no spaces)</span>
               </span>
             </div>
 
             <div className="statDiv">
               <span className="statNum">
-                {inputText.trim() == ""
-                  ? 0
-                  : inputText.trim().split(/.?\n+.?/g).length}
+                {inputText.trim() == "" ? 0 : inputText.trim().split(/.?\n+.?/g).length}
               </span>
               <span className="statName">
                 paragraph
-                {inputText.trim().split(/.?\n+.?/g).length != 1 ||
-                inputText.trim() == ""
+                {inputText.trim().split(/.?\n+.?/g).length != 1 || inputText.trim() == ""
                   ? "s"
                   : ""}
               </span>
             </div>
 
             <div className="statDiv">
-              <span className="statNum">
-                {inputText.split(/.+?\?+/g).length - 1}
-              </span>
+              <span className="statNum">{inputText.split(/.+?\?+/g).length - 1}</span>
               <span className="statName">
                 question
                 {inputText.split(/.+?\?+/g).length - 1 != 1 ? "s" : ""}
@@ -279,9 +262,7 @@ export default function Home() {
             </div>
 
             <div className="statDiv">
-              <span className="statNum">
-                {inputText.split(/.+?!+/g).length - 1}
-              </span>
+              <span className="statNum">{inputText.split(/.+?!+/g).length - 1}</span>
               <span className="statName">
                 exclamation
                 {inputText.split(/.+?!+/g).length - 1 != 1 ? "s" : ""}
@@ -289,9 +270,7 @@ export default function Home() {
             </div>
 
             <div className="statDiv">
-              <span className="statNum">
-                {inputText.split(/["“”].+?["“”]/g).length - 1}
-              </span>
+              <span className="statNum">{inputText.split(/["“”].+?["“”]/g).length - 1}</span>
               <span className="statName">
                 quotation
                 {inputText.split(/["“”].+?["“”]/g).length - 1 != 1 ? "s" : ""}
@@ -300,9 +279,19 @@ export default function Home() {
 
             <div className="statDiv">
               <span className="statNum">
-                {inputText.trim() == ""
-                  ? 0
-                  : avgArrayElementLength(getActualWords(inputText))}
+                {inputText.match(/(\(.+?\))|(\[.+?\])|(\{.+?\})|(—.+?—)|(--.+?--)/g)?.length}
+              </span>
+              <span className="statName">
+                paranthetical
+                {inputText.match(/(\(.+?\))|(\[.+?\])|(\{.+?\})|(—.+?—)|(--.+?--)/g)?.length != 1
+                  ? "s"
+                  : ""}
+              </span>
+            </div>
+
+            <div className="statDiv">
+              <span className="statNum">
+                {inputText.trim() == "" ? 0 : avgArrayElementLength(getActualWords(inputText))}
               </span>
               <span className="statName">average word length</span>
             </div>
