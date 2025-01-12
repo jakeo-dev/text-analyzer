@@ -88,9 +88,9 @@ export default function Home() {
     "any",
   ];
 
-  function handleDebugClick() {
+  /* function handleDebugClick() {
     console.log(inputText.match(/[A-Z]]/g));
-  }
+  } */
 
   function handleInput(text: string) {
     setInputText(text);
