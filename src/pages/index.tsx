@@ -1,3 +1,8 @@
+// this code uses \W instead of [^A-z0-9-_] for regex
+// \W counts a "word" with a dash in it as two separate "words"[^A-z0-9-_], like "self-driving" or "spanish-speaking"
+// [^A-z0-9-_] would count these "words" as one "word"
+// from what ive seen from other word counter websites, they count all words with dashes in them as one, so thats what this code does too
+
 import { useEffect, useState } from "react";
 import ResponsiveTextArea from "@/components/ResponsiveTextArea";
 
@@ -7,6 +12,86 @@ export default function Home() {
   }, []);
 
   const [inputText, setInputText] = useState("");
+
+  const commonWords = [
+    "the",
+    "of",
+    "to",
+    "and",
+    "a",
+    "in",
+    "is",
+    "it",
+    "you",
+    "that",
+    "he",
+    "was",
+    "for",
+    "on",
+    "are",
+    "with",
+    "as",
+    "I",
+    "his",
+    "they",
+    "be",
+    "at",
+    "have",
+    "this",
+    "from",
+    "or",
+    "had",
+    "by",
+    "but",
+    "what",
+    "some",
+    "we",
+    "can",
+    "out",
+    "were",
+    "all",
+    "there",
+    "when",
+    "use",
+    "your",
+    "how",
+    "an",
+    "each",
+    "she",
+    "which",
+    "do",
+    "their",
+    "time",
+    "if",
+    "will",
+    "way",
+    "about",
+    "many",
+    "then",
+    "them",
+    "would",
+    "so",
+    "these",
+    "her",
+    "see",
+    "him",
+    "has",
+    "more",
+    "could",
+    "go",
+    "come",
+    "did",
+    "no",
+    "most",
+    "my",
+    "over",
+    "than",
+    "who",
+    "may",
+    "been",
+    "now",
+    "any",
+  ];
 
   function handleInput(text: string) {
     setInputText(text);
@@ -84,7 +169,6 @@ export default function Home() {
       }
     );
 
-    // Sort the array based on the second element
     items.sort(function (first, second) {
       return second[1] - first[1];
     });
@@ -92,22 +176,31 @@ export default function Home() {
     return items;
   }
 
+  function removeCommonWords(array: Array<string>) {
+    let newArray = JSON.parse(JSON.stringify(array));
+    for (const word of array)
+      if (commonWords.includes(word))
+        newArray.splice(newArray.indexOf(word), 1);
+
+    return newArray;
+  }
+
   return (
     <>
       <div className="lg:flex gap-4 items-center justify-center min-h-screen">
         <div className="flex-1">
-          <h1 className="text-xl font-bold pl-3 pb-1">Text Analyzer</h1>
+          <h1 className="text-xl font-bold pl-3 pb-1.5">Text Analyzer</h1>
           <ResponsiveTextArea
             value={inputText}
             onInput={(e) => handleInput(e.currentTarget.value)}
-            className="min-h-[31.875rem] lg:max-h-[80vh]" // 1 line = 2.125 rem
+            className="min-h-[31.875rem] max-h-[50vh] lg:max-h-[80vh]" // 1 line = 2.125 rem
             placeholder="Enter text to analyze..."
             maxLength={-1}
             required={true}
           />
         </div>
 
-        <div className="lg:w-52 lg:max-h-[80vh] overflow-auto bg-gray-200 border-gray-200 border-2 rounded-md p-2">
+        <div className="lg:w-60 lg:max-h-[80vh] overflow-auto bg-gray-200 border-gray-200 border-2 rounded-md p-2 mt-4 lg:mt-0">
           <div className="statBigDiv">
             <div className="statDiv">
               <span className="statNum">{getWords(inputText).length}</span>
@@ -208,7 +301,7 @@ export default function Home() {
 
           <div className="statBigDiv">
             <div className="statDiv block">
-              <span className="statTitle">longest words</span>
+              <span className="statTitle">Longest words</span>
               {longestWords(getWords(inputText))
                 .slice(0, 5)
                 .map(([word], index) => (
@@ -222,8 +315,22 @@ export default function Home() {
 
           <div className="statBigDiv">
             <div className="statDiv block">
-              <span className="statTitle">most frequent words</span>
+              <span className="statTitle">Most frequent words</span>
               {frequentWords(getWords(inputText))
+                .slice(0, 5)
+                .map(([word, count], index) => (
+                  <div className="statDiv" key={index}>
+                    <span className="statNum">{word}</span>
+                    <span className="statName">{count}</span>
+                  </div>
+                ))}
+            </div>
+          </div>
+
+          <div className="statBigDiv">
+            <div className="statDiv block">
+              <span className="statTitle">Most frequent uncommon words</span>
+              {frequentWords(removeCommonWords(getWords(inputText)))
                 .slice(0, 5)
                 .map(([word, count], index) => (
                   <div className="statDiv" key={index}>

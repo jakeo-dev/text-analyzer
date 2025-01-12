@@ -4,8 +4,9 @@
 
 @layer components {
   .statBigDiv {
-    @apply bg-gray-100 rounded-md p-4 mt-2 lg:first:mt-0;
+    @apply bg-gray-100 rounded-md p-4 mt-2 first:mt-0;
   }
+
   .statDiv {
     @apply flex gap-2 mb-3 last:mb-0;
   }
