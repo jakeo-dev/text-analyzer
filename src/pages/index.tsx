@@ -1,7 +1,6 @@
-// this code uses \W instead of [^A-z0-9-_] for regex
-// \W counts a "word" with a dash in it as two separate "words"[^A-z0-9-_], like "self-driving" or "spanish-speaking"
-// [^A-z0-9-_] would count these "words" as one "word"
-// from what ive seen from other word counter websites, they count all words with dashes in them as one, so thats what this code does too
+// REGEX EXPLANATION:
+// \W counts a "word" with a dash in it as two separate "words", like "self-driving" or "spanish-speaking"
+// [^A-z0-9-_\p{L}] counts these "words" as one "word"
 
 import { useEffect, useState } from "react";
 import ResponsiveTextArea from "@/components/ResponsiveTextArea";
@@ -98,35 +97,52 @@ export default function Home() {
     localStorage.setItem("input", text);
   }
 
-  function getWords(string: string) {
+  function getWordsForCount(string: string) {
     // https://www.mediacollege.com/internet/javascript/text/count-words.html
+    // used for word count
     if (string.trim().length === 0) return [];
     else {
-      string = string
+      const words = string
         .replaceAll("\n", " ")
         .replace(/(^\s*)|(\s*$)/gi, "")
         .replace(/[ ]{2,}/gi, " ")
-        .replace(/\n /, "\n");
-      const words = string.split(" ").filter((word) => /\w/.test(word));
+        .replace(/\n /, "\n")
+        .split(" ")
+        .filter((word) => /\w/.test(word));
+      return words;
+    }
+  }
+
+  function getActualWords(string: string) {
+    // used to get the actual individual words; returns an array of words
+    if (string.trim().length === 0) return [];
+    else {
+      let words = string
+        .replaceAll("\n", " ")
+        .replace(/(^\s*)|(\s*$)/gi, "")
+        .replace(/[ ]{2,}/gi, " ")
+        .replace(/\n /, "\n")
+        .split(" ")
+        .filter((word) => /\w/.test(word));
+      words = words
+        .join(" ")
+        .replace(/[^A-z0-9-_\p{L}'’]/gu, " ") // counts words with dashes in them as one word, like "self-driving" or "spanish-speaking"
+        .replace(/(?<=.)' | '(?=.)/g, " ") // makes sure that single quotes are only counted as being parts of word when they're surrounded by letters on both sides (accounts for contractions & possessives but not plural possessives)
+        .split(" ")
+        .filter((word) => word.length > 0);
       return words;
     }
   }
 
   function avgArrayElementLength(array: Array<string>) {
     let sum = 0;
-    for (const word of array) sum += word.replaceAll(/\W/g, "").length;
+    for (const word of array) sum += word.length;
 
     return (sum / array.length).toFixed(1);
   }
 
   function longestWords(array: Array<string>) {
-    const actualWordsArray = array
-      .join(" ")
-      .replace(/\W/g, " ")
-      .split(" ")
-      .filter((word) => word.length > 0);
-
-    const uniqueWordsArray = removeDuplicates(actualWordsArray);
+    const uniqueWordsArray = removeDuplicates(array);
 
     const wordsDictionary: { [key: string]: number } = {};
     for (const word of uniqueWordsArray) {
@@ -142,19 +158,13 @@ export default function Home() {
   }
 
   function frequentWords(array: Array<string>) {
-    const actualWordsArray = array
-      .join(" ")
-      .replace(/\W/g, " ")
-      .split(" ")
-      .filter((word) => word.length > 0);
-
-    const uniqueWordsArray = removeDuplicates(actualWordsArray);
+    const uniqueWordsArray = removeDuplicates(array);
 
     const wordsDictionary: { [key: string]: number } = {};
     for (const word of uniqueWordsArray) {
       wordsDictionary[word.toLowerCase()] = 0;
     }
-    for (const word of actualWordsArray) {
+    for (const word of array) {
       wordsDictionary[word.toLowerCase()] += 1;
     }
 
@@ -177,7 +187,7 @@ export default function Home() {
   }
 
   function removeCommonWords(array: Array<string>) {
-    let newArray = JSON.parse(JSON.stringify(array));
+    const newArray = JSON.parse(JSON.stringify(array));
     for (const word of array)
       if (commonWords.includes(word))
         newArray.splice(newArray.indexOf(word), 1);
@@ -203,20 +213,22 @@ export default function Home() {
         <div className="lg:w-60 lg:max-h-[80vh] overflow-auto bg-gray-200 border-gray-200 border-2 rounded-md p-2 mt-4 lg:mt-0">
           <div className="statBigDiv">
             <div className="statDiv">
-              <span className="statNum">{getWords(inputText).length}</span>
+              <span className="statNum">
+                {getWordsForCount(inputText).length}
+              </span>
               <span className="statName">
                 word
-                {getWords(inputText).length != 1 ? "s" : ""}
+                {getWordsForCount(inputText).length != 1 ? "s" : ""}
               </span>
             </div>
 
             <div className="statDiv">
               <span className="statNum">
-                {removeDuplicates(getWords(inputText)).length}
+                {removeDuplicates(getWordsForCount(inputText)).length}
               </span>
               <span className="statName">
                 unique word
-                {getWords(inputText).length != 1 ? "s" : ""}
+                {getWordsForCount(inputText).length != 1 ? "s" : ""}
               </span>
             </div>
 
@@ -293,7 +305,7 @@ export default function Home() {
               <span className="statNum">
                 {inputText.trim() == ""
                   ? 0
-                  : avgArrayElementLength(getWords(inputText))}
+                  : avgArrayElementLength(getActualWords(inputText))}
               </span>
               <span className="statName">average word length</span>
             </div>
@@ -301,22 +313,8 @@ export default function Home() {
 
           <div className="statBigDiv">
             <div className="statDiv block">
-              <span className="statTitle">Longest words</span>
-              {longestWords(getWords(inputText))
-                .slice(0, 5)
-                .map(([word], index) => (
-                  <div className="statDiv" key={index}>
-                    <span className="statNum">{word}</span>
-                    {/* <span className="statName">{length}</span> */}
-                  </div>
-                ))}
-            </div>
-          </div>
-
-          <div className="statBigDiv">
-            <div className="statDiv block">
               <span className="statTitle">Most frequent words</span>
-              {frequentWords(getWords(inputText))
+              {frequentWords(getActualWords(inputText))
                 .slice(0, 5)
                 .map(([word, count], index) => (
                   <div className="statDiv" key={index}>
@@ -330,12 +328,26 @@ export default function Home() {
           <div className="statBigDiv">
             <div className="statDiv block">
               <span className="statTitle">Most frequent uncommon words</span>
-              {frequentWords(removeCommonWords(getWords(inputText)))
+              {frequentWords(removeCommonWords(getActualWords(inputText)))
                 .slice(0, 5)
                 .map(([word, count], index) => (
                   <div className="statDiv" key={index}>
                     <span className="statNum">{word}</span>
                     <span className="statName">{count}</span>
+                  </div>
+                ))}
+            </div>
+          </div>
+
+          <div className="statBigDiv">
+            <div className="statDiv block">
+              <span className="statTitle">Longest words</span>
+              {longestWords(getActualWords(inputText))
+                .slice(0, 5)
+                .map(([word], index) => (
+                  <div className="statDiv" key={index}>
+                    <span className="statNum">{word}</span>
+                    {/* <span className="statName">{length}</span> */}
                   </div>
                 ))}
             </div>
