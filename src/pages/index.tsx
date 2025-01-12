@@ -1,7 +1,3 @@
-// REGEX EXPLANATION:
-// \W counts a "word" with a dash in it as two separate "words", like "self-driving" or "spanish-speaking"
-// [^A-z0-9-_\p{L}] counts these "words" as one "word"
-
 import { useEffect, useState } from "react";
 import ResponsiveTextArea from "@/components/ResponsiveTextArea";
 
@@ -97,9 +93,9 @@ export default function Home() {
     localStorage.setItem("input", text);
   }
 
-  function getWordsForCount(string: string) {
+  function wordCount(string: string) {
     // https://www.mediacollege.com/internet/javascript/text/count-words.html
-    // used for word count
+    // get word count
     if (string.trim().length === 0) return [];
     else {
       const words = string
@@ -107,9 +103,9 @@ export default function Home() {
         .replace(/(^\s*)|(\s*$)/gi, "")
         .replace(/[ ]{2,}/gi, " ")
         .replace(/\n /, "\n")
-        .split(" ")
+        .split(/(\s|—|--)+/g)
         .filter((word) => /\w/.test(word));
-      return words;
+      return words.length;
     }
   }
 
@@ -129,7 +125,8 @@ export default function Home() {
         .replace(/[^A-z0-9-_\p{L}'’]/gu, " ") // counts words with dashes in them as one word, like "self-driving" or "spanish-speaking"
         .replace(/(?<=.)' | '(?=.)/g, " ") // makes sure that single quotes are only counted as being parts of word when they're surrounded by letters on both sides (accounts for contractions & possessives but not plural possessives)
         .split(" ")
-        .filter((word) => word.length > 0);
+        .filter((word) => word.length > 0)
+        .map((word) => word.toLowerCase());
       return words;
     }
   }
@@ -146,7 +143,7 @@ export default function Home() {
 
     const wordsDictionary: { [key: string]: number } = {};
     for (const word of uniqueWordsArray) {
-      wordsDictionary[word.toLowerCase()] = word.length;
+      wordsDictionary[word] = word.length;
     }
 
     return sortDictionaryByValues(wordsDictionary);
@@ -162,10 +159,10 @@ export default function Home() {
 
     const wordsDictionary: { [key: string]: number } = {};
     for (const word of uniqueWordsArray) {
-      wordsDictionary[word.toLowerCase()] = 0;
+      wordsDictionary[word] = 0;
     }
     for (const word of array) {
-      wordsDictionary[word.toLowerCase()] += 1;
+      wordsDictionary[word] += 1;
     }
 
     return sortDictionaryByValues(wordsDictionary);
@@ -213,22 +210,22 @@ export default function Home() {
         <div className="lg:w-60 lg:max-h-[80vh] overflow-auto bg-gray-200 border-gray-200 border-2 rounded-md p-2 mt-4 lg:mt-0">
           <div className="statBigDiv">
             <div className="statDiv">
-              <span className="statNum">
-                {getWordsForCount(inputText).length}
-              </span>
+              <span className="statNum">{wordCount(inputText)}</span>
               <span className="statName">
                 word
-                {getWordsForCount(inputText).length != 1 ? "s" : ""}
+                {wordCount(inputText) != 1 ? "s" : ""}
               </span>
             </div>
 
             <div className="statDiv">
               <span className="statNum">
-                {removeDuplicates(getWordsForCount(inputText)).length}
+                {removeDuplicates(getActualWords(inputText)).length}
               </span>
               <span className="statName">
                 unique word
-                {getWordsForCount(inputText).length != 1 ? "s" : ""}
+                {removeDuplicates(getActualWords(inputText)).length != 1
+                  ? "s"
+                  : ""}
               </span>
             </div>
 
@@ -264,8 +261,8 @@ export default function Home() {
               </span>
               <span className="statName">
                 paragraph
-                {inputText.trim().split(/.?\n+.?/g).length != 1 &&
-                inputText.trim() != ""
+                {inputText.trim().split(/.?\n+.?/g).length != 1 ||
+                inputText.trim() == ""
                   ? "s"
                   : ""}
               </span>
