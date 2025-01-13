@@ -254,6 +254,16 @@ export default function Home() {
 
             <div className="statDiv">
               <span className="statNum">
+                {inputText.split(/.+?[.?!]+(?=\s+[A-Z]|\n|$)/g).length - 1}
+              </span>
+              <span className="statName">
+                sentence
+                {inputText.split(/.+?[.?!]+(?=\s+[A-Z]|\n|$)/g).length != 1 ? "s" : ""}
+              </span>
+            </div>
+
+            <div className="statDiv">
+              <span className="statNum">
                 {inputText.trim() == "" ? 0 : inputText.trim().split(/.?\n+.?/g).length}
               </span>
               <span className="statName">
@@ -263,7 +273,9 @@ export default function Home() {
                   : ""}
               </span>
             </div>
+          </div>
 
+          <div className="statBigDiv">
             <div className="statDiv">
               <span className="statNum">{inputText.split(/.+?\?+/g).length - 1}</span>
               <span className="statName">
@@ -301,13 +313,6 @@ export default function Home() {
             </div>
 
             <div className="statDiv">
-              <span className="statNum">
-                {inputText.trim() == "" ? 0 : avgArrayElementLength(getActualWords(inputText))}
-              </span>
-              <span className="statName">average word length</span>
-            </div>
-
-            <div className="statDiv">
               <span className="statNum">{inputText.match(/[A-Z]/g)?.length}</span>
               <span className="statName">uppercase letters</span>
             </div>
@@ -315,6 +320,13 @@ export default function Home() {
             <div className="statDiv">
               <span className="statNum">{inputText.match(/[a-z]/g)?.length}</span>
               <span className="statName">lowercase letters</span>
+            </div>
+
+            <div className="statDiv">
+              <span className="statNum">
+                {inputText.trim() == "" ? 0 : avgArrayElementLength(getActualWords(inputText))}
+              </span>
+              <span className="statName">average word length</span>
             </div>
           </div>
 
