@@ -313,6 +313,16 @@ export default function Home() {
             </div>
 
             <div className="statDiv">
+              <span className="statNum">{inputText.match(/[0-9]+([.,]?[0-9]+)?/g)?.length}</span>
+              <span className="statName">numbers</span>
+            </div>
+
+            <div className="statDiv">
+              <span className="statNum">{inputText.match(/[0-9]/g)?.length}</span>
+              <span className="statName">digits</span>
+            </div>
+
+            <div className="statDiv">
               <span className="statNum">{inputText.match(/[A-Z]/g)?.length}</span>
               <span className="statName">uppercase letters</span>
             </div>
@@ -363,7 +373,7 @@ export default function Home() {
               <span className="statTitle">Longest words</span>
               {longestWords(getActualWords(inputText))
                 .slice(0, 5)
-                .map(([word], index) => (
+                .map(([word /* , length */], index) => (
                   <div className="statDiv" key={index}>
                     <span className="statNum">{word}</span>
                     {/* <span className="statName">{length}</span> */}
@@ -392,6 +402,15 @@ export default function Home() {
             </div>
 
             <div className="statDiv">
+              {/* average 0.7 words per second; 40 words per minute */}
+              <span className="statNum">
+                {Math.trunc(wordCount(inputText) / 0.7 / 60)} min{" "}
+                {((wordCount(inputText) / 0.7) % 60).toFixed(0)} sec
+              </span>
+              <span className="statName">avg typing time</span>
+            </div>
+
+            <div className="statDiv">
               {/* average 1.16 characters (no spaces) per second; 70 characters (no spaces) per minute */}
               <span className="statNum">
                 {Math.trunc(
@@ -405,15 +424,6 @@ export default function Home() {
                 sec
               </span>
               <span className="statName">avg handwriting time</span>
-            </div>
-
-            <div className="statDiv">
-              {/* average 0.7 words per second; 40 words per minute */}
-              <span className="statNum">
-                {Math.trunc(wordCount(inputText) / 0.7 / 60)} min{" "}
-                {((wordCount(inputText) / 0.7) % 60).toFixed(0)} sec
-              </span>
-              <span className="statName">avg typing time</span>
             </div>
           </div>
         </div>

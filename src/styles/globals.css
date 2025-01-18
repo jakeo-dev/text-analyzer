@@ -16,7 +16,7 @@
   }
 
   .statName {
-    @apply block text-right flex-1;
+    @apply block text-right flex-1 leading-5;
   }
 
   .statTitle {
