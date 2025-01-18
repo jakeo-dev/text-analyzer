@@ -276,71 +276,6 @@ export default function Home() {
           </div>
 
           <div className="statBigDiv">
-            <div className="statDiv">
-              <span className="statNum">{inputText.split(/.+?\?+/g).length - 1}</span>
-              <span className="statName">
-                question
-                {inputText.split(/.+?\?+/g).length - 1 != 1 ? "s" : ""}
-              </span>
-            </div>
-
-            <div className="statDiv">
-              <span className="statNum">{inputText.split(/.+?!+/g).length - 1}</span>
-              <span className="statName">
-                exclamation
-                {inputText.split(/.+?!+/g).length - 1 != 1 ? "s" : ""}
-              </span>
-            </div>
-
-            <div className="statDiv">
-              <span className="statNum">{inputText.split(/["“”].+?["“”]/g).length - 1}</span>
-              <span className="statName">
-                quotation
-                {inputText.split(/["“”].+?["“”]/g).length - 1 != 1 ? "s" : ""}
-              </span>
-            </div>
-
-            <div className="statDiv">
-              <span className="statNum">
-                {inputText.match(/(\(.+?\))|(\[.+?\])|(\{.+?\})|(—.+?—)|(--.+?--)/g)?.length}
-              </span>
-              <span className="statName">
-                paranthetical
-                {inputText.match(/(\(.+?\))|(\[.+?\])|(\{.+?\})|(—.+?—)|(--.+?--)/g)?.length != 1
-                  ? "s"
-                  : ""}
-              </span>
-            </div>
-
-            <div className="statDiv">
-              <span className="statNum">{inputText.match(/[0-9]+([.,]?[0-9]+)?/g)?.length}</span>
-              <span className="statName">numbers</span>
-            </div>
-
-            <div className="statDiv">
-              <span className="statNum">{inputText.match(/[0-9]/g)?.length}</span>
-              <span className="statName">digits</span>
-            </div>
-
-            <div className="statDiv">
-              <span className="statNum">{inputText.match(/[A-Z]/g)?.length}</span>
-              <span className="statName">uppercase letters</span>
-            </div>
-
-            <div className="statDiv">
-              <span className="statNum">{inputText.match(/[a-z]/g)?.length}</span>
-              <span className="statName">lowercase letters</span>
-            </div>
-
-            <div className="statDiv">
-              <span className="statNum">
-                {inputText.trim() == "" ? 0 : avgArrayElementLength(getActualWords(inputText))}
-              </span>
-              <span className="statName">average word length</span>
-            </div>
-          </div>
-
-          <div className="statBigDiv">
             <div className="statDiv block">
               <span className="statTitle">Most frequent words</span>
               {frequentWords(getActualWords(inputText))
@@ -424,6 +359,83 @@ export default function Home() {
                 sec
               </span>
               <span className="statName">avg handwriting time</span>
+            </div>
+          </div>
+
+          <div className="statBigDiv">
+            <div className="statDiv">
+              <span className="statNum">{inputText.split(/.+?\?+/g).length - 1}</span>
+              <span className="statName">
+                question
+                {inputText.split(/.+?\?+/g).length - 1 != 1 ? "s" : ""}
+              </span>
+            </div>
+
+            <div className="statDiv">
+              <span className="statNum">{inputText.split(/.+?!+/g).length - 1}</span>
+              <span className="statName">
+                exclamation
+                {inputText.split(/.+?!+/g).length - 1 != 1 ? "s" : ""}
+              </span>
+            </div>
+
+            <div className="statDiv">
+              <span className="statNum">{inputText.split(/["“”].+?["“”]/g).length - 1}</span>
+              <span className="statName">
+                quotation
+                {inputText.split(/["“”].+?["“”]/g).length - 1 != 1 ? "s" : ""}
+              </span>
+            </div>
+
+            <div className="statDiv">
+              <span className="statNum">
+                {inputText.match(/(\(.+?\))|(\[.+?\])|(\{.+?\})|(—.+?—)|(--.+?--)/g)?.length}
+              </span>
+              <span className="statName">
+                paranthetical
+                {inputText.match(/(\(.+?\))|(\[.+?\])|(\{.+?\})|(—.+?—)|(--.+?--)/g)?.length != 1
+                  ? "s"
+                  : ""}
+              </span>
+            </div>
+
+            <div className="statDiv">
+              <span className="statNum">{inputText.match(/[0-9]+([.,]?[0-9]+)?/g)?.length}</span>
+              <span className="statName">numbers</span>
+            </div>
+
+            <div className="statDiv">
+              <span className="statNum">{inputText.match(/[0-9]/g)?.length}</span>
+              <span className="statName">digits</span>
+            </div>
+
+            <div className="statDiv">
+              <span className="statNum">{inputText.match(/[A-Z]/g)?.length}</span>
+              <span className="statName">uppercase letters</span>
+            </div>
+
+            <div className="statDiv">
+              <span className="statNum">{inputText.match(/[a-z]/g)?.length}</span>
+              <span className="statName">lowercase letters</span>
+            </div>
+
+            <div className="statDiv">
+              <span className="statNum">
+                {inputText.match(/[bcdfghjklmnpqrstvwxyz]/gi)?.length}
+              </span>
+              <span className="statName">consonants</span>
+            </div>
+
+            <div className="statDiv">
+              <span className="statNum">{inputText.match(/[aeiou]/gi)?.length}</span>
+              <span className="statName">vowels</span>
+            </div>
+
+            <div className="statDiv">
+              <span className="statNum">
+                {inputText.trim() == "" ? 0 : avgArrayElementLength(getActualWords(inputText))}
+              </span>
+              <span className="statName">average word length</span>
             </div>
           </div>
         </div>
