@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import ResponsiveTextArea from "@/components/ResponsiveTextArea";
 
 export default function Home() {
+  const placeholderText = "Lorem ipsum odor amet, consectetuer adipiscing elit. Auctor erat ullamcorper lectus magnis neque. Justo senectus velit pulvinar diam fames scelerisque neque. Pellentesque consectetur dolor magnis dapibus, sodales habitasse. Libero cubilia accumsan tincidunt fermentum dictum massa tristique habitant imperdiet. Vitae eu venenatis augue et sit fermentum augue. Quam quisque efficitur efficitur ridiculus per elementum. Potenti id platea dis curabitur nibh suspendisse eleifend penatibus. Vehicula phasellus ullamcorper a habitasse, aenean placerat lacus tellus. Porta rutrum faucibus hendrerit platea facilisis hac nec ultrices\n\nTempus vivamus interdum per aliquam curae dui convallis. Conubia facilisi adipiscing arcu cursus venenatis fames mattis velit. In inceptos tristique euismod donec interdum molestie. Ridiculus a congue risus ad; amet dapibus. Lectus etiam aliquet ornare, facilisi iaculis lectus dignissim. Class semper nec sapien vulputate lobortis senectus orci nam lobortis. Primis facilisis proin pulvinar eu, natoque finibus iaculis magna. Pellentesque porta montes nulla sem; habitant praesent. Venenatis feugiat augue mus netus conubia rutrum sagittis.\n\nEfficitur ipsum maecenas vulputate; tristique himenaeos at sit. Hac diam maximus ligula cubilia tincidunt. Nulla eget penatibus odio tincidunt; per venenatis. Hendrerit vitae gravida efficitur nulla fermentum amet. Nisi volutpat nam vulputate habitant fermentum aptent molestie. Mattis suspendisse lacus eros feugiat purus. Elementum ex convallis turpis tristique interdum. Orci condimentum duis platea himenaeos feugiat.\n\nOrci curabitur maecenas mattis; tempus penatibus libero molestie. Purus tortor aenean velit turpis lobortis pellentesque? Elit donec ante eget enim proin ullamcorper proin. Pulvinar donec commodo eros eros aliquet cubilia. Tincidunt vehicula lacinia pulvinar phasellus vestibulum arcu adipiscing. Aenean sem ultricies massa gravida lectus venenatis. Aenean diam sagittis sapien in nostra odio phasellus eleifend condimentum. Fermentum penatibus aliquam; placerat suscipit primis convallis.\n\nJusto nam justo praesent sociosqu quisque euismod sagittis! Curabitur dictum elit nunc, varius iaculis posuere at vestibulum. Scelerisque semper sollicitudin massa semper pharetra donec. Euismod pharetra posuere condimentum phasellus lobortis nulla pellentesque quam senectus. Sollicitudin lacus hac nec erat finibus tempor massa sed. Dignissim elit pretium vestibulum augue imperdiet eu donec. Dictumst nullam orci phasellus at ad. Fermentum porta id leo vitae justo orci.\n\nRisus suspendisse semper vestibulum aptent maecenas; feugiat fermentum placerat. Torquent pharetra viverra elit ligula vestibulum curae sed vitae? Ante malesuada tristique euismod amet morbi. Ultricies aliquet penatibus quam finibus nulla magnis class. Cursus pharetra luctus finibus primis vestibulum mattis. Placerat platea tempor interdum felis, facilisi est erat. Ornare tincidunt efficitur convallis rhoncus ultricies. Nullam primis curae fermentum sapien sapien luctus nibh erat dapibus. Convallis leo mattis hac ultricies lacinia.";
+  
   useEffect(() => {
-    setInputText(localStorage.getItem("input") ?? "");
+    setInputText(localStorage.getItem("input") ?? placeholderText);
   }, []);
 
-  const [inputText, setInputText] = useState("");
+  const [inputText, setInputText] = useState(placeholderText);
 
   const commonWords = [
     "the",
@@ -389,7 +391,7 @@ export default function Home() {
 
             <div className="statDiv">
               <span className="statNum">
-                {inputText.match(/(\(.+?\))|(\[.+?\])|(\{.+?\})|(—.+?—)|(--.+?--)/g)?.length}
+                {inputText.match(/(\(.+?\))|(\[.+?\])|(\{.+?\})|(—.+?—)|(--.+?--)/g)?.length ?? 0}
               </span>
               <span className="statName">
                 paranthetical
@@ -400,34 +402,34 @@ export default function Home() {
             </div>
 
             <div className="statDiv">
-              <span className="statNum">{inputText.match(/[0-9]+([.,]?[0-9]+)?/g)?.length}</span>
+              <span className="statNum">{inputText.match(/[0-9]+([.,]?[0-9]+)?/g)?.length ?? 0}</span>
               <span className="statName">numbers</span>
             </div>
 
             <div className="statDiv">
-              <span className="statNum">{inputText.match(/[0-9]/g)?.length}</span>
+              <span className="statNum">{inputText.match(/[0-9]/g)?.length ?? 0}</span>
               <span className="statName">digits</span>
             </div>
 
             <div className="statDiv">
-              <span className="statNum">{inputText.match(/[A-Z]/g)?.length}</span>
+              <span className="statNum">{inputText.match(/[A-Z]/g)?.length ?? 0}</span>
               <span className="statName">uppercase letters</span>
             </div>
 
             <div className="statDiv">
-              <span className="statNum">{inputText.match(/[a-z]/g)?.length}</span>
+              <span className="statNum">{inputText.match(/[a-z]/g)?.length ?? 0}</span>
               <span className="statName">lowercase letters</span>
             </div>
 
             <div className="statDiv">
               <span className="statNum">
-                {inputText.match(/[bcdfghjklmnpqrstvwxyz]/gi)?.length}
+                {inputText.match(/[bcdfghjklmnpqrstvwxyz]/gi)?.length ?? 0}
               </span>
               <span className="statName">consonants</span>
             </div>
 
             <div className="statDiv">
-              <span className="statNum">{inputText.match(/[aeiou]/gi)?.length}</span>
+              <span className="statNum">{inputText.match(/[aeiou]/gi)?.length ?? 0}</span>
               <span className="statName">vowels</span>
             </div>
 
