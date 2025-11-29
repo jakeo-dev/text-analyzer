@@ -29,7 +29,7 @@ export default function Home() {
     "are",
     "with",
     "as",
-    "I",
+    "i",
     "his",
     "they",
     "be",
